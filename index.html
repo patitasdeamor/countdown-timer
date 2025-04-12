@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Estilos personalizados (puedes cambiar colores y fuentes) */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent; /* Fondo transparente para integrarse mejor */
+      margin: 0;
+      font-family: 'Montserrat', sans-serif; /* Usa la misma fuente que tu sitio */
+    }
+    #countdown {
+      font-size: 32px;
+      color: #2c3e50; /* Color del texto */
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+    }
+  </style>
+</head>
+<body>
+  <div id="countdown">00:00:00</div>
+
+  <script>
+    // Función para calcular y actualizar la cuenta regresiva
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const targetTime = localStorage.getItem('targetTime'); // Guarda la hora objetivo
+
+      // Si no hay hora guardada o ya pasó, crea una nueva (próximas 24 horas)
+      if (!targetTime || now > targetTime) {
+        const newTarget = now + 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+        localStorage.setItem('targetTime', newTarget);
+        return updateCountdown();
+      }
+
+      // Calcula la diferencia
+      const difference = targetTime - now;
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      // Formatea el tiempo y actualiza el HTML
+      document.getElementById('countdown').innerHTML = 
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    // Actualiza cada segundo
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // Inicia inmediatamente
+  </script>
+</body>
+</html>
